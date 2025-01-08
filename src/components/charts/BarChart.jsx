@@ -77,6 +77,9 @@ const BarChart = ({
         },
         ticks: {
           color: '#ffffff',
+          maxRotation: 45,
+          minRotation: 45,
+          autoSkip: false,
           font: {
             size: expanded ? 12 : 10
           }

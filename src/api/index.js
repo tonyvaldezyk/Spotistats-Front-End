@@ -25,11 +25,6 @@ export const spotifyApi = {
     return response.data;
   },
 
-  getPositivnessMode: async () => {
-    const response = await axios.get(`${BASE_URL}/positivness-mode`);
-    return response.data;
-  },
-
   getDanceabilityAndValence: async () => {
     const response = await axios.get(`${BASE_URL}/danceability-and-valence`);
     return response.data;

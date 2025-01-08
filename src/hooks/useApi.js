@@ -33,13 +33,6 @@ export const useDanceabilityByYear = () => {
 };
 
 // Analyses de caractéristiques
-export const useValenceByMode = () => {
-  return useQuery({
-    queryKey: ["valenceByMode"],
-    queryFn: spotifyApi.getPositivnessMode,
-  });
-};
-
 export const useDanceabilityAndValence = () => {
   return useQuery({
     queryKey: ["danceabilityAndValence"],

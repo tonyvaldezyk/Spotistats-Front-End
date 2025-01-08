@@ -9,15 +9,13 @@ import {
 } from 'react-icons/ri';
 import BarChart from './charts/BarChart';
 import LineChart from './charts/LineChart';
-import ScatterChart from './charts/ScatterChart';
-import RadarChart from './charts/RadarChart';
+import HeatmapChart from './charts/HeatmapChart';
 import CurvedLineChart from './charts/CurvedLineChart';
 import {
   useTracksByYear,
   useTracksByArtistYear,
   useAcousticnessByYear,
   useDanceabilityByYear,
-  useValenceByMode,
   useDanceabilityAndValence,
   usePopularityByTempo,
   useTop10Popular,
@@ -74,7 +72,7 @@ const Widget = ({ title, children, className = '', onExpand, expanded }) => {
       <div className="expanded-widget-overlay" onClick={() => onExpand()}>
         <div className="expanded-widget" onClick={e => e.stopPropagation()}>
           <button className="close-button" onClick={() => onExpand()}>
-            <RiCloseLine />
+            <RiCloseLine size={24} />
           </button>
           <h3 className="widget-title">{title}</h3>
           <div className="widget-content">
@@ -109,6 +107,22 @@ const ErrorMessage = ({ message }) => (
   </div>
 );
 
+const TrackItem = ({ rank, name, artists, artwork, stats }) => (
+  <div className="track-item">
+    <div className="track-rank">{rank}</div>
+    {artwork && (
+      <div className="track-artwork">
+        <img src={artwork} alt={name} />
+      </div>
+    )}
+    <div className="track-info">
+      <div className="track-name">{name}</div>
+      <div className="track-artists">{artists}</div>
+      {stats && <div className="track-stats">{stats}</div>}
+    </div>
+  </div>
+);
+
 export const Dashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
   const [expandedWidget, setExpandedWidget] = useState(null);
@@ -119,7 +133,6 @@ export const Dashboard = () => {
   const { data: artistTracks, isLoading: isLoadingArtist, error: artistError } = useTracksByArtistYear(selectedYear);
   const { data: acousticnessData, isLoading: isLoadingAcousticness, error: acousticnessError } = useAcousticnessByYear();
   const { data: danceabilityData, isLoading: isLoadingDanceability, error: danceabilityError } = useDanceabilityByYear();
-  const { data: valenceData, isLoading: isLoadingValence, error: valenceError } = useValenceByMode();
   const { data: danceValenceData, isLoading: isLoadingDanceValence, error: danceValenceError } = useDanceabilityAndValence();
   const { data: popularityTempoData, isLoading: isLoadingPopTempo, error: popTempoError } = usePopularityByTempo();
   const { data: top10Popular, isLoading: isLoadingTop10Popular, error: top10PopularError } = useTop10Popular();
@@ -152,36 +165,17 @@ export const Dashboard = () => {
             onClick={() => setActiveSection('dashboard')}
           />
           <SidebarItem 
-            icon={<RiBarChartLine />}
-            label="Trends" 
-            active={activeSection === 'trends'} 
-            onClick={() => setActiveSection('trends')}
-          />
-          <SidebarItem 
             icon={<RiMusicLine />}
             label="Top Tracks" 
             active={activeSection === 'tracks'} 
             onClick={() => setActiveSection('tracks')}
-          />
-          <SidebarItem 
-            icon={<RiHeartLine />}
-            label="Musical Features" 
-            active={activeSection === 'features'} 
-            onClick={() => setActiveSection('features')}
           />
         </div>
       </div>
 
       <div className="main-content">
         <header className="header">
-          <div className="header-content">
-            <img 
-              src="https://storage.googleapis.com/pr-newsroom-wp/1/2018/11/Spotify_Icon_RGB_Green.png"
-              alt="Spotify Icon"
-              className="header-logo"
-            />
-            <h1>Analyse des Données Spotify</h1>
-          </div>
+          <h1>Analyse des Données Spotify</h1>
         </header>
 
         <div className="dashboard-grid">
@@ -278,41 +272,6 @@ export const Dashboard = () => {
               </Widget>
 
               <Widget 
-                title="Analyse des Caractéristiques par Mode Musical" 
-                className="kpi-widget"
-                onExpand={() => handleExpand('valenceMode')}
-                expanded={expandedWidget === 'valenceMode'}
-              >
-                {isLoadingValence ? (
-                  <LoadingSpinner />
-                ) : valenceError ? (
-                  <ErrorMessage message="Erreur lors du chargement des données" />
-                ) : valenceData?.positivness ? (
-                  <RadarChart 
-                    data={valenceData}
-                    labels={[
-                      "Positivité (0-1)",
-                      "Énergie (0-1)",
-                      "Dansabilité (0-1)",
-                      "Acoustique (0-1)",
-                      "Instrumental (0-1)"
-                    ]}
-                    values={[
-                      valenceData.positivness["1"],
-                      valenceData.energy || 0.8,
-                      valenceData.danceability || 0.7,
-                      valenceData.acousticness || 0.4,
-                      valenceData.instrumentalness || 0.2
-                    ]}
-                    title="Caractéristiques par Mode (Majeur/Mineur)"
-                    expanded={expandedWidget === 'valenceMode'}
-                  />
-                ) : (
-                  <div className="placeholder">Données non disponibles</div>
-                )}
-              </Widget>
-
-              <Widget 
                 title="Relation Dansabilité et Positivité" 
                 className="kpi-widget"
                 onExpand={() => handleExpand('danceValence')}
@@ -323,17 +282,16 @@ export const Dashboard = () => {
                 ) : danceValenceError ? (
                   <ErrorMessage message="Erreur lors du chargement des données" />
                 ) : danceValenceData?.data ? (
-                  <ScatterChart 
+                  <HeatmapChart 
                     data={danceValenceData.data}
-                    xKey="danceability"
-                    yKey="valence"
+                    maxDensity={danceValenceData.maxDensity}
                     title="Corrélation entre Dansabilité et Positivité"
                     xLabel="Dansabilité (0-1)"
                     yLabel="Positivité (0-1)"
                     expanded={expandedWidget === 'danceValence'}
                   />
                 ) : (
-                  <div className="placeholder">Données non disponibles</div>
+                  <div className="placeholder">Aucune donnée disponible</div>
                 )}
               </Widget>
 
@@ -408,24 +366,14 @@ export const Dashboard = () => {
                 ) : top10Popular ? (
                   <div className="top-tracks-list">
                     {top10Popular.map((track, index) => (
-                      <div key={index} className="track-item">
-                        <div className="track-rank">{index + 1}</div>
-                        <div className="track-artwork">
-                          <img 
-                            src={track.artwork_url || 'https://via.placeholder.com/64'} 
-                            alt={track.name}
-                            width="64"
-                            height="64"
-                          />
-                        </div>
-                        <div className="track-info">
-                          <div className="track-name">{track.name}</div>
-                          <div className="track-artist">{track.artists}</div>
-                          <div className="track-stats">
-                            Popularité: {track.popularity}
-                          </div>
-                        </div>
-                      </div>
+                      <TrackItem 
+                        key={index} 
+                        rank={index + 1} 
+                        name={track.name} 
+                        artists={track.artists} 
+                        artwork={track.artwork_url} 
+                        stats={`Popularité: ${track.popularity}`}
+                      />
                     ))}
                   </div>
                 ) : (
@@ -446,24 +394,14 @@ export const Dashboard = () => {
                 ) : top10Dance ? (
                   <div className="top-tracks-list">
                     {top10Dance.map((track, index) => (
-                      <div key={index} className="track-item">
-                        <div className="track-rank">{index + 1}</div>
-                        <div className="track-artwork">
-                          <img 
-                            src={track.artwork_url || 'https://via.placeholder.com/64'} 
-                            alt={track.name}
-                            width="64"
-                            height="64"
-                          />
-                        </div>
-                        <div className="track-info">
-                          <div className="track-name">{track.name}</div>
-                          <div className="track-artist">{track.artists}</div>
-                          <div className="track-stats">
-                            Dansabilité: {Math.round(track.danceability * 100)}%
-                          </div>
-                        </div>
-                      </div>
+                      <TrackItem 
+                        key={index} 
+                        rank={index + 1} 
+                        name={track.name} 
+                        artists={track.artists} 
+                        artwork={track.artwork_url} 
+                        stats={`Dansabilité: ${Math.round(track.danceability * 100)}%`}
+                      />
                     ))}
                   </div>
                 ) : (
@@ -484,24 +422,14 @@ export const Dashboard = () => {
                 ) : top10Relaxing ? (
                   <div className="top-tracks-list">
                     {top10Relaxing.map((track, index) => (
-                      <div key={index} className="track-item">
-                        <div className="track-rank">{index + 1}</div>
-                        <div className="track-artwork">
-                          <img 
-                            src={track.artwork_url || 'https://via.placeholder.com/64'} 
-                            alt={track.name}
-                            width="64"
-                            height="64"
-                          />
-                        </div>
-                        <div className="track-info">
-                          <div className="track-name">{track.name}</div>
-                          <div className="track-artist">{track.artists}</div>
-                          <div className="track-stats">
-                            Acoustique: {Math.round(track.acousticness * 100)}%
-                          </div>
-                        </div>
-                      </div>
+                      <TrackItem 
+                        key={index} 
+                        rank={index + 1} 
+                        name={track.name} 
+                        artists={track.artists} 
+                        artwork={track.artwork_url} 
+                        stats={`Acoustique: ${Math.round(track.acousticness * 100)}%`}
+                      />
                     ))}
                   </div>
                 ) : (
@@ -522,24 +450,14 @@ export const Dashboard = () => {
                 ) : top10Longest ? (
                   <div className="top-tracks-list">
                     {top10Longest.map((track, index) => (
-                      <div key={index} className="track-item">
-                        <div className="track-rank">{index + 1}</div>
-                        <div className="track-artwork">
-                          <img 
-                            src={track.artwork_url || 'https://via.placeholder.com/64'} 
-                            alt={track.name}
-                            width="64"
-                            height="64"
-                          />
-                        </div>
-                        <div className="track-info">
-                          <div className="track-name">{track.name}</div>
-                          <div className="track-artist">{track.artists}</div>
-                          <div className="track-stats">
-                            Durée: {Math.floor(track.duration_ms / 60000)}:{String(Math.floor((track.duration_ms % 60000) / 1000)).padStart(2, '0')}
-                          </div>
-                        </div>
-                      </div>
+                      <TrackItem 
+                        key={index} 
+                        rank={index + 1} 
+                        name={track.name} 
+                        artists={track.artists} 
+                        artwork={track.artwork_url} 
+                        stats={`Durée: ${Math.floor(track.duration_ms / 60000)}:${String(Math.floor((track.duration_ms % 60000) / 1000)).padStart(2, '0')}`}
+                      />
                     ))}
                   </div>
                 ) : (
