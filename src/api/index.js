@@ -4,28 +4,28 @@ const BASE_URL = 'http://localhost:8000';
 
 export const spotifyApi = {
   // Analyses temporelles
-  getTracksByYear: async () => {
+  getSongsByYear: async () => {
     const response = await axios.get(`${BASE_URL}/songs-by-year`);
     return response.data;
   },
 
-  getTracksByArtistYear: async (year) => {
+  getArtistByYear: async (year) => {
     const response = await axios.get(`${BASE_URL}/artist/${year}`);
     return response.data;
   },
 
   // Analyses musicales
-  getAcousticnessByYear: async () => {
+  getAcousticnessPerYear: async () => {
     const response = await axios.get(`${BASE_URL}/acousticness-per-year`);
     return response.data;
   },
 
-  getDanceabilityByYear: async () => {
+  getDanceabilityPerYear: async () => {
     const response = await axios.get(`${BASE_URL}/danceability-per-year`);
     return response.data;
   },
 
-  getValenceByMode: async () => {
+  getPositivnessMode: async () => {
     const response = await axios.get(`${BASE_URL}/positivness-mode`);
     return response.data;
   },
@@ -35,12 +35,12 @@ export const spotifyApi = {
     return response.data;
   },
 
-  getPopularityByTempo: async () => {
+  getPopularityVsTempo: async () => {
     const response = await axios.get(`${BASE_URL}/popularity-vs-tempo`);
     return response.data;
   },
 
-  getPopularityByLanguage: async () => {
+  getPopularityPerLanguage: async () => {
     const response = await axios.get(`${BASE_URL}/popularity-per-language`);
     return response.data;
   },
@@ -52,17 +52,17 @@ export const spotifyApi = {
   },
 
   getTop10Dance: async () => {
-    const response = await axios.get(`${BASE_URL}/top-10-party-tracks`);
+    const response = await axios.get(`${BASE_URL}/top-10-dance`);
     return response.data;
   },
 
   getTop10Relaxing: async () => {
-    const response = await axios.get(`${BASE_URL}/top-10-relaxing-tracks`);
+    const response = await axios.get(`${BASE_URL}/top-10-relaxing`);
     return response.data;
   },
 
   getTop10Longest: async () => {
-    const response = await axios.get(`${BASE_URL}/top-10-longest-tracks`);
+    const response = await axios.get(`${BASE_URL}/top-10-longest`);
     return response.data;
   }
 };

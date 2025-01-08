@@ -5,14 +5,15 @@ import { spotifyApi } from "../api";
 export const useTracksByYear = () => {
   return useQuery({
     queryKey: ["tracksByYear"],
-    queryFn: spotifyApi.getTracksByYear,
+    queryFn: spotifyApi.getSongsByYear,
   });
 };
 
-export const useTracksByArtistYear = () => {
+export const useTracksByArtistYear = (year) => {
   return useQuery({
-    queryKey: ["tracksByArtistYear"],
-    queryFn: spotifyApi.getTracksByArtistYear,
+    queryKey: ["tracksByArtistYear", year],
+    queryFn: () => spotifyApi.getArtistByYear(year),
+    enabled: !!year,
   });
 };
 
@@ -20,14 +21,14 @@ export const useTracksByArtistYear = () => {
 export const useAcousticnessByYear = () => {
   return useQuery({
     queryKey: ["acousticnessByYear"],
-    queryFn: spotifyApi.getAcousticnessByYear,
+    queryFn: spotifyApi.getAcousticnessPerYear,
   });
 };
 
 export const useDanceabilityByYear = () => {
   return useQuery({
     queryKey: ["danceabilityByYear"],
-    queryFn: spotifyApi.getDanceabilityByYear,
+    queryFn: spotifyApi.getDanceabilityPerYear,
   });
 };
 
@@ -35,28 +36,28 @@ export const useDanceabilityByYear = () => {
 export const useValenceByMode = () => {
   return useQuery({
     queryKey: ["valenceByMode"],
-    queryFn: spotifyApi.getValenceByMode,
+    queryFn: spotifyApi.getPositivnessMode,
   });
 };
 
-export const useDanceabilityByValence = () => {
+export const useDanceabilityAndValence = () => {
   return useQuery({
-    queryKey: ["danceabilityByValence"],
-    queryFn: spotifyApi.getDanceabilityByValence,
+    queryKey: ["danceabilityAndValence"],
+    queryFn: spotifyApi.getDanceabilityAndValence,
   });
 };
 
 export const usePopularityByTempo = () => {
   return useQuery({
     queryKey: ["popularityByTempo"],
-    queryFn: spotifyApi.getPopularityByTempo,
+    queryFn: spotifyApi.getPopularityVsTempo,
   });
 };
 
 export const usePopularityByLanguage = () => {
   return useQuery({
     queryKey: ["popularityByLanguage"],
-    queryFn: spotifyApi.getPopularityByLanguage,
+    queryFn: spotifyApi.getPopularityPerLanguage,
   });
 };
 
@@ -86,13 +87,5 @@ export const useTop10Longest = () => {
   return useQuery({
     queryKey: ["top10Longest"],
     queryFn: spotifyApi.getTop10Longest,
-  });
-};
-
-// Analyses croisées
-export const useDanceabilityAndValence = () => {
-  return useQuery({
-    queryKey: ["danceabilityAndValence"],
-    queryFn: spotifyApi.getDanceabilityAndValence,
   });
 };

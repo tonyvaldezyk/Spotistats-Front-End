@@ -115,18 +115,18 @@ export const Dashboard = () => {
   const [selectedYear, setSelectedYear] = useState('');
   
   // Récupération des données
-  const { data: tracksByYear, isLoading: isLoadingTracks } = useTracksByYear();
-  const { data: artistTracks, isLoading: isLoadingArtist } = useTracksByArtistYear(selectedYear);
-  const { data: acousticnessData, isLoading: isLoadingAcousticness } = useAcousticnessByYear();
-  const { data: danceabilityData, isLoading: isLoadingDanceability } = useDanceabilityByYear();
-  const { data: valenceData, isLoading: isLoadingValence } = useValenceByMode();
-  const { data: danceValenceData, isLoading: isLoadingDanceValence } = useDanceabilityAndValence();
-  const { data: popularityTempoData, isLoading: isLoadingPopTempo } = usePopularityByTempo();
-  const { data: top10Popular, isLoading: isLoadingTop10Popular } = useTop10Popular();
-  const { data: top10Dance, isLoading: isLoadingTop10Dance } = useTop10Dance();
-  const { data: top10Relaxing, isLoading: isLoadingTop10Relaxing } = useTop10Relaxing();
-  const { data: popularityLanguageData, isLoading: isLoadingPopLanguage } = usePopularityByLanguage();
-  const { data: top10Longest, isLoading: isLoadingTop10Longest } = useTop10Longest();
+  const { data: tracksByYear, isLoading: isLoadingTracks, error: tracksError } = useTracksByYear();
+  const { data: artistTracks, isLoading: isLoadingArtist, error: artistError } = useTracksByArtistYear(selectedYear);
+  const { data: acousticnessData, isLoading: isLoadingAcousticness, error: acousticnessError } = useAcousticnessByYear();
+  const { data: danceabilityData, isLoading: isLoadingDanceability, error: danceabilityError } = useDanceabilityByYear();
+  const { data: valenceData, isLoading: isLoadingValence, error: valenceError } = useValenceByMode();
+  const { data: danceValenceData, isLoading: isLoadingDanceValence, error: danceValenceError } = useDanceabilityAndValence();
+  const { data: popularityTempoData, isLoading: isLoadingPopTempo, error: popTempoError } = usePopularityByTempo();
+  const { data: top10Popular, isLoading: isLoadingTop10Popular, error: top10PopularError } = useTop10Popular();
+  const { data: top10Dance, isLoading: isLoadingTop10Dance, error: top10DanceError } = useTop10Dance();
+  const { data: top10Relaxing, isLoading: isLoadingTop10Relaxing, error: top10RelaxingError } = useTop10Relaxing();
+  const { data: popularityLanguageData, isLoading: isLoadingPopLanguage, error: popLanguageError } = usePopularityByLanguage();
+  const { data: top10Longest, isLoading: isLoadingTop10Longest, error: top10LongestError } = useTop10Longest();
 
   const handleExpand = (widgetId) => {
     setExpandedWidget(expandedWidget === widgetId ? null : widgetId);
@@ -196,6 +196,8 @@ export const Dashboard = () => {
               >
                 {isLoadingTracks ? (
                   <LoadingSpinner />
+                ) : tracksError ? (
+                  <ErrorMessage message="Erreur lors du chargement des données" />
                 ) : (
                   <LineChart 
                     data={Object.entries(tracksByYear?.songsByYear || {}).map(([year, count]) => ({
@@ -226,12 +228,14 @@ export const Dashboard = () => {
                 />
                 {isLoadingArtist ? (
                   <LoadingSpinner />
+                ) : artistError ? (
+                  <ErrorMessage message="Erreur lors du chargement des données" />
                 ) : artistTracks?.songsPerArtist ? (
                   <BarChart 
                     data={Object.entries(artistTracks.songsPerArtist)
                       .map(([artist, count]) => ({
-                        artist: artist.replace(/[\[\]']/g, ''),
-                        count: count
+                        artist,
+                        count
                       }))}
                     xKey="artist"
                     yKey="count"
@@ -253,6 +257,8 @@ export const Dashboard = () => {
               >
                 {isLoadingAcousticness || isLoadingDanceability ? (
                   <LoadingSpinner />
+                ) : acousticnessError || danceabilityError ? (
+                  <ErrorMessage message="Erreur lors du chargement des données" />
                 ) : (
                   <CurvedLineChart 
                     data={Object.entries(acousticnessData?.average_acousticness || {}).map(([year, value]) => ({
@@ -279,6 +285,8 @@ export const Dashboard = () => {
               >
                 {isLoadingValence ? (
                   <LoadingSpinner />
+                ) : valenceError ? (
+                  <ErrorMessage message="Erreur lors du chargement des données" />
                 ) : valenceData?.positivness ? (
                   <RadarChart 
                     data={valenceData}
@@ -312,6 +320,8 @@ export const Dashboard = () => {
               >
                 {isLoadingDanceValence ? (
                   <LoadingSpinner />
+                ) : danceValenceError ? (
+                  <ErrorMessage message="Erreur lors du chargement des données" />
                 ) : danceValenceData?.data ? (
                   <ScatterChart 
                     data={danceValenceData.data}
@@ -335,6 +345,8 @@ export const Dashboard = () => {
               >
                 {isLoadingPopTempo ? (
                   <LoadingSpinner />
+                ) : popTempoError ? (
+                  <ErrorMessage message="Erreur lors du chargement des données" />
                 ) : popularityTempoData?.data ? (
                   <LineChart 
                     data={popularityTempoData.data}
@@ -359,6 +371,8 @@ export const Dashboard = () => {
               >
                 {isLoadingPopLanguage ? (
                   <LoadingSpinner />
+                ) : popLanguageError ? (
+                  <ErrorMessage message="Erreur lors du chargement des données" />
                 ) : popularityLanguageData?.data ? (
                   <BarChart 
                     data={popularityLanguageData.data}
@@ -385,6 +399,8 @@ export const Dashboard = () => {
               >
                 {isLoadingTop10Popular ? (
                   <LoadingSpinner />
+                ) : top10PopularError ? (
+                  <ErrorMessage message="Erreur lors du chargement des données" />
                 ) : top10Popular ? (
                   <div className="top-tracks-list">
                     {top10Popular.map((track, index) => (
@@ -411,6 +427,8 @@ export const Dashboard = () => {
               >
                 {isLoadingTop10Dance ? (
                   <LoadingSpinner />
+                ) : top10DanceError ? (
+                  <ErrorMessage message="Erreur lors du chargement des données" />
                 ) : top10Dance ? (
                   <div className="top-tracks-list">
                     {top10Dance.map((track, index) => (
@@ -437,6 +455,8 @@ export const Dashboard = () => {
               >
                 {isLoadingTop10Relaxing ? (
                   <LoadingSpinner />
+                ) : top10RelaxingError ? (
+                  <ErrorMessage message="Erreur lors du chargement des données" />
                 ) : top10Relaxing ? (
                   <div className="top-tracks-list">
                     {top10Relaxing.map((track, index) => (
@@ -466,6 +486,8 @@ export const Dashboard = () => {
               >
                 {isLoadingTop10Longest ? (
                   <LoadingSpinner />
+                ) : top10LongestError ? (
+                  <ErrorMessage message="Erreur lors du chargement des données" />
                 ) : top10Longest ? (
                   <div className="top-tracks-list">
                     {top10Longest.map((track, index) => (
