@@ -180,290 +180,298 @@ export const Dashboard = () => {
 
         <div className="dashboard-grid">
           <div className="kpis-section">
-            <h2 className="section-title">Évolution Temporelle</h2>
-            <div className="kpis-grid">
-              <Widget 
-                title="Évolution du Nombre de Titres par Année" 
-                className="kpi-widget"
-                onExpand={() => handleExpand('tracksYear')}
-                expanded={expandedWidget === 'tracksYear'}
-              >
-                {isLoadingTracks ? (
-                  <LoadingSpinner />
-                ) : tracksError ? (
-                  <ErrorMessage message="Erreur lors du chargement des données" />
-                ) : (
-                  <LineChart 
-                    data={Object.entries(tracksByYear?.songsByYear || {}).map(([year, count]) => ({
-                      year: parseInt(year),
-                      count: count
-                    }))}
-                    xKey="year"
-                    yKey="count"
-                    title="Nombre de Titres par Année"
-                    xLabel="Année"
-                    yLabel="Nombre de Titres"
+            <div className="section">
+              <h2 className="section-title">Évolution Temporelle</h2>
+              <div className="section-content">
+                <div className="kpis-grid">
+                  <Widget 
+                    title="Évolution du Nombre de Titres par Année" 
+                    className="kpi-widget"
+                    onExpand={() => handleExpand('tracksYear')}
                     expanded={expandedWidget === 'tracksYear'}
-                    variant="smooth"
-                  />
-                )}
-              </Widget>
+                  >
+                    {isLoadingTracks ? (
+                      <LoadingSpinner />
+                    ) : tracksError ? (
+                      <ErrorMessage message="Erreur lors du chargement des données" />
+                    ) : (
+                      <LineChart 
+                        data={Object.entries(tracksByYear?.songsByYear || {}).map(([year, count]) => ({
+                          year: parseInt(year),
+                          count: count
+                        }))}
+                        xKey="year"
+                        yKey="count"
+                        title="Nombre de Titres par Année"
+                        xLabel="Année"
+                        yLabel="Nombre de Titres"
+                        expanded={expandedWidget === 'tracksYear'}
+                        variant="smooth"
+                      />
+                    )}
+                  </Widget>
 
-              <Widget 
-                title="Top 10 Artistes par Année" 
-                className="kpi-widget"
-                onExpand={() => handleExpand('artistYear')}
-                expanded={expandedWidget === 'artistYear'}
-              >
-                <YearInput
-                  value={selectedYear}
-                  onChange={handleYearChange}
-                  placeholder="Entrez une année..."
-                />
-                {isLoadingArtist ? (
-                  <LoadingSpinner />
-                ) : artistError ? (
-                  <ErrorMessage message="Erreur lors du chargement des données" />
-                ) : artistTracks?.songsPerArtist ? (
-                  <BarChart 
-                    data={Object.entries(artistTracks.songsPerArtist)
-                      .map(([artist, count]) => ({
-                        artist,
-                        count
-                      }))}
-                    xKey="artist"
-                    yKey="count"
-                    title={`Top 10 Artistes en ${selectedYear}`}
-                    xLabel="Artiste"
-                    yLabel="Nombre de Titres"
+                  <Widget 
+                    title="Top 10 Artistes par Année" 
+                    className="kpi-widget"
+                    onExpand={() => handleExpand('artistYear')}
                     expanded={expandedWidget === 'artistYear'}
-                  />
-                ) : (
-                  <div className="placeholder">Entrez une année pour voir les données</div>
-                )}
-              </Widget>
+                  >
+                    <YearInput
+                      value={selectedYear}
+                      onChange={handleYearChange}
+                      placeholder="Entrez une année..."
+                    />
+                    {isLoadingArtist ? (
+                      <LoadingSpinner />
+                    ) : artistError ? (
+                      <ErrorMessage message="Erreur lors du chargement des données" />
+                    ) : artistTracks?.songsPerArtist ? (
+                      <BarChart 
+                        data={Object.entries(artistTracks.songsPerArtist)
+                          .map(([artist, count]) => ({
+                            artist,
+                            count
+                          }))}
+                        xKey="artist"
+                        yKey="count"
+                        title={`Top 10 Artistes en ${selectedYear}`}
+                        xLabel="Artiste"
+                        yLabel="Nombre de Titres"
+                        expanded={expandedWidget === 'artistYear'}
+                      />
+                    ) : (
+                      <div className="placeholder">Entrez une année pour voir les données</div>
+                    )}
+                  </Widget>
 
-              <Widget 
-                title="Caractéristiques Musicales" 
-                className="kpi-widget"
-                onExpand={() => handleExpand('features')}
-                expanded={expandedWidget === 'features'}
-              >
-                {isLoadingAcousticness || isLoadingDanceability ? (
-                  <LoadingSpinner />
-                ) : acousticnessError || danceabilityError ? (
-                  <ErrorMessage message="Erreur lors du chargement des données" />
-                ) : (
-                  <CurvedLineChart 
-                    data={Object.entries(acousticnessData?.average_acousticness || {}).map(([year, value]) => ({
-                      year: parseInt(year),
-                      acousticness: value,
-                      danceability: danceabilityData?.average_danceability[year] || 0
-                    }))}
-                    xKey="year"
-                    yKeys={["acousticness", "danceability"]}
-                    labels={["Acoustique", "Dansabilité"]}
-                    title="Évolution des Caractéristiques Musicales"
-                    xLabel="Année"
-                    yLabel="Score (0-1)"
+                  <Widget 
+                    title="Caractéristiques Musicales" 
+                    className="kpi-widget"
+                    onExpand={() => handleExpand('features')}
                     expanded={expandedWidget === 'features'}
-                  />
-                )}
-              </Widget>
+                  >
+                    {isLoadingAcousticness || isLoadingDanceability ? (
+                      <LoadingSpinner />
+                    ) : acousticnessError || danceabilityError ? (
+                      <ErrorMessage message="Erreur lors du chargement des données" />
+                    ) : (
+                      <CurvedLineChart 
+                        data={Object.entries(acousticnessData?.average_acousticness || {}).map(([year, value]) => ({
+                          year: parseInt(year),
+                          acousticness: value,
+                          danceability: danceabilityData?.average_danceability[year] || 0
+                        }))}
+                        xKey="year"
+                        yKeys={["acousticness", "danceability"]}
+                        labels={["Acoustique", "Dansabilité"]}
+                        title="Évolution des Caractéristiques Musicales"
+                        xLabel="Année"
+                        yLabel="Score (0-1)"
+                        expanded={expandedWidget === 'features'}
+                      />
+                    )}
+                  </Widget>
 
-              <Widget 
-                title="Relation Dansabilité et Positivité" 
-                className="kpi-widget"
-                onExpand={() => handleExpand('danceValence')}
-                expanded={expandedWidget === 'danceValence'}
-              >
-                {isLoadingDanceValence ? (
-                  <LoadingSpinner />
-                ) : danceValenceError ? (
-                  <ErrorMessage message="Erreur lors du chargement des données" />
-                ) : danceValenceData?.data ? (
-                  <HeatmapChart 
-                    data={danceValenceData.data}
-                    maxDensity={danceValenceData.maxDensity}
-                    title="Corrélation entre Dansabilité et Positivité"
-                    xLabel="Dansabilité (0-1)"
-                    yLabel="Positivité (0-1)"
+                  <Widget 
+                    title="Relation Dansabilité et Positivité" 
+                    className="kpi-widget"
+                    onExpand={() => handleExpand('danceValence')}
                     expanded={expandedWidget === 'danceValence'}
-                  />
-                ) : (
-                  <div className="placeholder">Aucune donnée disponible</div>
-                )}
-              </Widget>
+                  >
+                    {isLoadingDanceValence ? (
+                      <LoadingSpinner />
+                    ) : danceValenceError ? (
+                      <ErrorMessage message="Erreur lors du chargement des données" />
+                    ) : danceValenceData?.data ? (
+                      <HeatmapChart 
+                        data={danceValenceData.data}
+                        maxDensity={danceValenceData.maxDensity}
+                        title="Corrélation entre Dansabilité et Positivité"
+                        xLabel="Dansabilité (0-1)"
+                        yLabel="Positivité (0-1)"
+                        expanded={expandedWidget === 'danceValence'}
+                      />
+                    ) : (
+                      <div className="placeholder">Aucune donnée disponible</div>
+                    )}
+                  </Widget>
 
-              <Widget 
-                title="Impact du Tempo sur la Popularité" 
-                className="kpi-widget"
-                onExpand={() => handleExpand('popularityTempo')}
-                expanded={expandedWidget === 'popularityTempo'}
-              >
-                {isLoadingPopTempo ? (
-                  <LoadingSpinner />
-                ) : popTempoError ? (
-                  <ErrorMessage message="Erreur lors du chargement des données" />
-                ) : popularityTempoData?.data ? (
-                  <LineChart 
-                    data={popularityTempoData.data}
-                    xKey="tempo"
-                    yKey="popularity"
-                    title="Impact du Tempo sur la Popularité"
-                    xLabel="Tempo (BPM)"
-                    yLabel="Popularité moyenne"
+                  <Widget 
+                    title="Impact du Tempo sur la Popularité" 
+                    className="kpi-widget"
+                    onExpand={() => handleExpand('popularityTempo')}
                     expanded={expandedWidget === 'popularityTempo'}
-                    variant="smooth"
-                  />
-                ) : (
-                  <div className="placeholder">Aucune donnée disponible</div>
-                )}
-              </Widget>
+                  >
+                    {isLoadingPopTempo ? (
+                      <LoadingSpinner />
+                    ) : popTempoError ? (
+                      <ErrorMessage message="Erreur lors du chargement des données" />
+                    ) : popularityTempoData?.data ? (
+                      <LineChart 
+                        data={popularityTempoData.data}
+                        xKey="tempo"
+                        yKey="popularity"
+                        title="Impact du Tempo sur la Popularité"
+                        xLabel="Tempo (BPM)"
+                        yLabel="Popularité moyenne"
+                        expanded={expandedWidget === 'popularityTempo'}
+                        variant="smooth"
+                      />
+                    ) : (
+                      <div className="placeholder">Aucune donnée disponible</div>
+                    )}
+                  </Widget>
 
-              <Widget 
-                title="Popularité par Langue" 
-                className="kpi-widget"
-                onExpand={() => handleExpand('popularityLanguage')}
-                expanded={expandedWidget === 'popularityLanguage'}
-              >
-                {isLoadingPopLanguage ? (
-                  <LoadingSpinner />
-                ) : popLanguageError ? (
-                  <ErrorMessage message="Erreur lors du chargement des données" />
-                ) : popularityLanguageData?.popularity_per_language ? (
-                  <BarChart 
-                    data={Object.entries(popularityLanguageData.popularity_per_language)
-                      .map(([language, popularity]) => ({
-                        language: language || 'Inconnu',
-                        popularity: Math.round(popularity)
-                      }))}
-                    xKey="language"
-                    yKey="popularity"
-                    title="Popularité moyenne par langue"
-                    xLabel="Langue"
-                    yLabel="Popularité"
+                  <Widget 
+                    title="Popularité par Langue" 
+                    className="kpi-widget"
+                    onExpand={() => handleExpand('popularityLanguage')}
                     expanded={expandedWidget === 'popularityLanguage'}
-                  />
-                ) : (
-                  <div className="placeholder">Aucune donnée disponible</div>
-                )}
-              </Widget>
+                  >
+                    {isLoadingPopLanguage ? (
+                      <LoadingSpinner />
+                    ) : popLanguageError ? (
+                      <ErrorMessage message="Erreur lors du chargement des données" />
+                    ) : popularityLanguageData?.popularity_per_language ? (
+                      <BarChart 
+                        data={Object.entries(popularityLanguageData.popularity_per_language)
+                          .map(([language, popularity]) => ({
+                            language: language || 'Inconnu',
+                            popularity: Math.round(popularity)
+                          }))}
+                        xKey="language"
+                        yKey="popularity"
+                        title="Popularité moyenne par langue"
+                        xLabel="Langue"
+                        yLabel="Popularité"
+                        expanded={expandedWidget === 'popularityLanguage'}
+                      />
+                    ) : (
+                      <div className="placeholder">Aucune donnée disponible</div>
+                    )}
+                  </Widget>
+                </div>
+              </div>
             </div>
 
-            <h2 className="section-title">Top Morceaux</h2>
-            <div className="kpis-grid">
-              <Widget 
-                title="Top 10 des Titres les Plus Populaires" 
-                className="kpi-widget"
-                onExpand={() => handleExpand('topPopular')}
-                expanded={expandedWidget === 'topPopular'}
-              >
-                {isLoadingTop10Popular ? (
-                  <LoadingSpinner />
-                ) : top10PopularError ? (
-                  <ErrorMessage message="Erreur lors du chargement des données" />
-                ) : top10Popular ? (
-                  <div className="top-tracks-list">
-                    {top10Popular.map((track, index) => (
-                      <TrackItem 
-                        key={index} 
-                        rank={index + 1} 
-                        name={track.name} 
-                        artists={track.artists} 
-                        artwork={track.artwork_url} 
-                        stats={`Popularité: ${track.popularity}`}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="placeholder">Données non disponibles</div>
-                )}
-              </Widget>
+            <div className="section">
+              <h2 className="section-title">Top Morceaux</h2>
+              <div className="section-content">
+                <div className="kpis-grid">
+                  <Widget 
+                    title="Top 10 des Titres les Plus Populaires" 
+                    className="kpi-widget"
+                    onExpand={() => handleExpand('topPopular')}
+                    expanded={expandedWidget === 'topPopular'}
+                  >
+                    {isLoadingTop10Popular ? (
+                      <LoadingSpinner />
+                    ) : top10PopularError ? (
+                      <ErrorMessage message="Erreur lors du chargement des données" />
+                    ) : top10Popular ? (
+                      <div className="top-tracks-list">
+                        {top10Popular.map((track, index) => (
+                          <TrackItem 
+                            key={index} 
+                            rank={index + 1} 
+                            name={track.name} 
+                            artists={track.artists} 
+                            artwork={track.artwork_url} 
+                            stats={`Popularité: ${track.popularity}`}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="placeholder">Données non disponibles</div>
+                    )}
+                  </Widget>
 
-              <Widget 
-                title="Top 10 des Titres les Plus Dansants" 
-                className="kpi-widget"
-                onExpand={() => handleExpand('topDance')}
-                expanded={expandedWidget === 'topDance'}
-              >
-                {isLoadingTop10Dance ? (
-                  <LoadingSpinner />
-                ) : top10DanceError ? (
-                  <ErrorMessage message="Erreur lors du chargement des données" />
-                ) : top10Dance ? (
-                  <div className="top-tracks-list">
-                    {top10Dance.map((track, index) => (
-                      <TrackItem 
-                        key={index} 
-                        rank={index + 1} 
-                        name={track.name} 
-                        artists={track.artists} 
-                        artwork={track.artwork_url} 
-                        stats={`Dansabilité: ${Math.round(track.danceability * 100)}%`}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="placeholder">Données non disponibles</div>
-                )}
-              </Widget>
+                  <Widget 
+                    title="Top 10 des Titres les Plus Dansants" 
+                    className="kpi-widget"
+                    onExpand={() => handleExpand('topDance')}
+                    expanded={expandedWidget === 'topDance'}
+                  >
+                    {isLoadingTop10Dance ? (
+                      <LoadingSpinner />
+                    ) : top10DanceError ? (
+                      <ErrorMessage message="Erreur lors du chargement des données" />
+                    ) : top10Dance ? (
+                      <div className="top-tracks-list">
+                        {top10Dance.map((track, index) => (
+                          <TrackItem 
+                            key={index} 
+                            rank={index + 1} 
+                            name={track.name} 
+                            artists={track.artists} 
+                            artwork={track.artwork_url} 
+                            stats={`Dansabilité: ${Math.round(track.danceability * 100)}%`}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="placeholder">Données non disponibles</div>
+                    )}
+                  </Widget>
 
-              <Widget 
-                title="Top 10 des Titres les Plus Relaxants" 
-                className="kpi-widget"
-                onExpand={() => handleExpand('topRelax')}
-                expanded={expandedWidget === 'topRelax'}
-              >
-                {isLoadingTop10Relaxing ? (
-                  <LoadingSpinner />
-                ) : top10RelaxingError ? (
-                  <ErrorMessage message="Erreur lors du chargement des données" />
-                ) : top10Relaxing ? (
-                  <div className="top-tracks-list">
-                    {top10Relaxing.map((track, index) => (
-                      <TrackItem 
-                        key={index} 
-                        rank={index + 1} 
-                        name={track.name} 
-                        artists={track.artists} 
-                        artwork={track.artwork_url} 
-                        stats={`Acoustique: ${Math.round(track.acousticness * 100)}%`}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="placeholder">Données non disponibles</div>
-                )}
-              </Widget>
+                  <Widget 
+                    title="Top 10 des Titres les Plus Relaxants" 
+                    className="kpi-widget"
+                    onExpand={() => handleExpand('topRelax')}
+                    expanded={expandedWidget === 'topRelax'}
+                  >
+                    {isLoadingTop10Relaxing ? (
+                      <LoadingSpinner />
+                    ) : top10RelaxingError ? (
+                      <ErrorMessage message="Erreur lors du chargement des données" />
+                    ) : top10Relaxing ? (
+                      <div className="top-tracks-list">
+                        {top10Relaxing.map((track, index) => (
+                          <TrackItem 
+                            key={index} 
+                            rank={index + 1} 
+                            name={track.name} 
+                            artists={track.artists} 
+                            artwork={track.artwork_url} 
+                            stats={`Acoustique: ${Math.round(track.acousticness * 100)}%`}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="placeholder">Données non disponibles</div>
+                    )}
+                  </Widget>
 
-              <Widget 
-                title="Top 10 des Morceaux les Plus Longs" 
-                className="kpi-widget"
-                onExpand={() => handleExpand('topLongest')}
-                expanded={expandedWidget === 'topLongest'}
-              >
-                {isLoadingTop10Longest ? (
-                  <LoadingSpinner />
-                ) : top10LongestError ? (
-                  <ErrorMessage message="Erreur lors du chargement des données" />
-                ) : top10Longest ? (
-                  <div className="top-tracks-list">
-                    {top10Longest.map((track, index) => (
-                      <TrackItem 
-                        key={index} 
-                        rank={index + 1} 
-                        name={track.name} 
-                        artists={track.artists} 
-                        artwork={track.artwork_url} 
-                        stats={`Durée: ${Math.floor(track.duration_ms / 60000)}:${String(Math.floor((track.duration_ms % 60000) / 1000)).padStart(2, '0')}`}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="placeholder">Données non disponibles</div>
-                )}
-              </Widget>
+                  <Widget 
+                    title="Top 10 des Morceaux les Plus Longs" 
+                    className="kpi-widget"
+                    onExpand={() => handleExpand('topLongest')}
+                    expanded={expandedWidget === 'topLongest'}
+                  >
+                    {isLoadingTop10Longest ? (
+                      <LoadingSpinner />
+                    ) : top10LongestError ? (
+                      <ErrorMessage message="Erreur lors du chargement des données" />
+                    ) : top10Longest ? (
+                      <div className="top-tracks-list">
+                        {top10Longest.map((track, index) => (
+                          <TrackItem 
+                            key={index} 
+                            rank={index + 1} 
+                            name={track.name} 
+                            artists={track.artists} 
+                            artwork={track.artwork_url} 
+                            stats={`Durée: ${Math.floor(track.duration_ms / 60000)}:${String(Math.floor((track.duration_ms % 60000) / 1000)).padStart(2, '0')}`}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="placeholder">Données non disponibles</div>
+                    )}
+                  </Widget>
+                </div>
+              </div>
             </div>
           </div>
         </div>

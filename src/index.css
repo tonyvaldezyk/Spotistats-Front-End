@@ -203,11 +203,93 @@ body {
   flex: 1;
 }
 
+.section {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
 .section-title {
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin-bottom: 20px;
-  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px;
+  position: relative;
+  background: linear-gradient(90deg, 
+    rgba(30, 215, 96, 0.15),
+    rgba(30, 215, 96, 0.05)
+  );
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(30, 215, 96, 0.2);
+  box-shadow: 
+    0 0 20px rgba(30, 215, 96, 0.1),
+    inset 0 0 20px rgba(30, 215, 96, 0.1);
+  transition: all 0.3s ease;
+}
+
+.section-title:hover {
+  border-color: rgba(30, 215, 96, 0.4);
+  box-shadow: 
+    0 0 25px rgba(30, 215, 96, 0.15),
+    inset 0 0 25px rgba(30, 215, 96, 0.15);
+  transform: translateY(-1px);
+}
+
+.section-title::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 21px;
+  padding: 1px;
+  background: linear-gradient(90deg, 
+    rgba(30, 215, 96, 0.5),
+    rgba(30, 215, 96, 0.2)
+  );
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  left: calc(100% + 1rem);
+  top: 50%;
+  height: 1px;
+  width: calc(100vw - 100% - 3rem);
+  background: linear-gradient(90deg, 
+    rgba(30, 215, 96, 0.8),
+    rgba(30, 215, 96, 0.1) 50%,
+    transparent
+  );
+  box-shadow: 0 0 15px rgba(30, 215, 96, 0.3);
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    opacity: 0.8;
+    box-shadow: 0 0 15px rgba(30, 215, 96, 0.3);
+  }
+  to {
+    opacity: 1;
+    box-shadow: 0 0 20px rgba(30, 215, 96, 0.5);
+  }
+}
+
+.section-content {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .tops-grid {
