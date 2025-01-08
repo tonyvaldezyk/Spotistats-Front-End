@@ -340,8 +340,8 @@ export const Dashboard = () => {
               <Widget 
                 title="Impact du Tempo sur la Popularité" 
                 className="kpi-widget"
-                onExpand={() => handleExpand('popTempo')}
-                expanded={expandedWidget === 'popTempo'}
+                onExpand={() => handleExpand('popularityTempo')}
+                expanded={expandedWidget === 'popularityTempo'}
               >
                 {isLoadingPopTempo ? (
                   <LoadingSpinner />
@@ -352,39 +352,43 @@ export const Dashboard = () => {
                     data={popularityTempoData.data}
                     xKey="tempo"
                     yKey="popularity"
-                    title="Relation entre Tempo et Popularité"
+                    title="Impact du Tempo sur la Popularité"
                     xLabel="Tempo (BPM)"
-                    yLabel="Popularité (0-100)"
-                    expanded={expandedWidget === 'popTempo'}
-                    variant="dashed"
+                    yLabel="Popularité moyenne"
+                    expanded={expandedWidget === 'popularityTempo'}
+                    variant="smooth"
                   />
                 ) : (
-                  <div className="placeholder">Données non disponibles</div>
+                  <div className="placeholder">Aucune donnée disponible</div>
                 )}
               </Widget>
 
               <Widget 
                 title="Popularité par Langue" 
                 className="kpi-widget"
-                onExpand={() => handleExpand('popLanguage')}
-                expanded={expandedWidget === 'popLanguage'}
+                onExpand={() => handleExpand('popularityLanguage')}
+                expanded={expandedWidget === 'popularityLanguage'}
               >
                 {isLoadingPopLanguage ? (
                   <LoadingSpinner />
                 ) : popLanguageError ? (
                   <ErrorMessage message="Erreur lors du chargement des données" />
-                ) : popularityLanguageData?.data ? (
+                ) : popularityLanguageData?.popularity_per_language ? (
                   <BarChart 
-                    data={popularityLanguageData.data}
+                    data={Object.entries(popularityLanguageData.popularity_per_language)
+                      .map(([language, popularity]) => ({
+                        language: language || 'Inconnu',
+                        popularity: Math.round(popularity)
+                      }))}
                     xKey="language"
                     yKey="popularity"
-                    title="Popularité Moyenne par Langue"
+                    title="Popularité moyenne par langue"
                     xLabel="Langue"
-                    yLabel="Popularité (0-100)"
-                    expanded={expandedWidget === 'popLanguage'}
+                    yLabel="Popularité"
+                    expanded={expandedWidget === 'popularityLanguage'}
                   />
                 ) : (
-                  <div className="placeholder">Données non disponibles</div>
+                  <div className="placeholder">Aucune donnée disponible</div>
                 )}
               </Widget>
             </div>
@@ -405,12 +409,22 @@ export const Dashboard = () => {
                   <div className="top-tracks-list">
                     {top10Popular.map((track, index) => (
                       <div key={index} className="track-item">
-                        <span className="track-number">{index + 1}</span>
+                        <div className="track-rank">{index + 1}</div>
+                        <div className="track-artwork">
+                          <img 
+                            src={track.artwork_url || 'https://via.placeholder.com/64'} 
+                            alt={track.name}
+                            width="64"
+                            height="64"
+                          />
+                        </div>
                         <div className="track-info">
                           <div className="track-name">{track.name}</div>
                           <div className="track-artist">{track.artists}</div>
+                          <div className="track-stats">
+                            Popularité: {track.popularity}
+                          </div>
                         </div>
-                        <div className="track-popularity">{track.popularity}</div>
                       </div>
                     ))}
                   </div>
@@ -433,12 +447,22 @@ export const Dashboard = () => {
                   <div className="top-tracks-list">
                     {top10Dance.map((track, index) => (
                       <div key={index} className="track-item">
-                        <span className="track-number">{index + 1}</span>
+                        <div className="track-rank">{index + 1}</div>
+                        <div className="track-artwork">
+                          <img 
+                            src={track.artwork_url || 'https://via.placeholder.com/64'} 
+                            alt={track.name}
+                            width="64"
+                            height="64"
+                          />
+                        </div>
                         <div className="track-info">
                           <div className="track-name">{track.name}</div>
                           <div className="track-artist">{track.artists}</div>
+                          <div className="track-stats">
+                            Dansabilité: {Math.round(track.danceability * 100)}%
+                          </div>
                         </div>
-                        <div className="track-score">{(track.danceability * 100).toFixed(0)}%</div>
                       </div>
                     ))}
                   </div>
@@ -461,14 +485,21 @@ export const Dashboard = () => {
                   <div className="top-tracks-list">
                     {top10Relaxing.map((track, index) => (
                       <div key={index} className="track-item">
-                        <span className="track-number">{index + 1}</span>
+                        <div className="track-rank">{index + 1}</div>
+                        <div className="track-artwork">
+                          <img 
+                            src={track.artwork_url || 'https://via.placeholder.com/64'} 
+                            alt={track.name}
+                            width="64"
+                            height="64"
+                          />
+                        </div>
                         <div className="track-info">
                           <div className="track-name">{track.name}</div>
                           <div className="track-artist">{track.artists}</div>
-                        </div>
-                        <div className="track-score">
-                          <div>Acoustique: {(track.acousticness * 100).toFixed(0)}%</div>
-                          <div>Énergie: {(track.energy * 100).toFixed(0)}%</div>
+                          <div className="track-stats">
+                            Acoustique: {Math.round(track.acousticness * 100)}%
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -492,13 +523,21 @@ export const Dashboard = () => {
                   <div className="top-tracks-list">
                     {top10Longest.map((track, index) => (
                       <div key={index} className="track-item">
-                        <span className="track-number">{index + 1}</span>
+                        <div className="track-rank">{index + 1}</div>
+                        <div className="track-artwork">
+                          <img 
+                            src={track.artwork_url || 'https://via.placeholder.com/64'} 
+                            alt={track.name}
+                            width="64"
+                            height="64"
+                          />
+                        </div>
                         <div className="track-info">
                           <div className="track-name">{track.name}</div>
                           <div className="track-artist">{track.artists}</div>
-                        </div>
-                        <div className="track-duration">
-                          {Math.floor(track.duration_ms / 60000)}:{String(Math.floor((track.duration_ms % 60000) / 1000)).padStart(2, '0')}
+                          <div className="track-stats">
+                            Durée: {Math.floor(track.duration_ms / 60000)}:{String(Math.floor((track.duration_ms % 60000) / 1000)).padStart(2, '0')}
+                          </div>
                         </div>
                       </div>
                     ))}
