@@ -1,43 +1,38 @@
 import React from 'react';
 import {
   Chart as ChartJS,
-  CategoryScale,
   LinearScale,
-  BarElement,
-  Title,
+  PointElement,
+  LineElement,
   Tooltip,
   Legend
 } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+import { Scatter } from 'react-chartjs-2';
 
 ChartJS.register(
-  CategoryScale,
   LinearScale,
-  BarElement,
-  Title,
+  PointElement,
+  LineElement,
   Tooltip,
   Legend
 );
 
-const BarChart = ({ 
+const ScatterChart = ({ 
   data, 
-  xKey = 'year',
-  yKey = 'count',
-  title, 
-  xLabel, 
+  xKey,
+  yKey,
+  title,
+  xLabel,
   yLabel,
   expanded = false,
-  stacked = false,
-  colors = ['#1ed760'] // Couleur Spotify par défaut
+  color = '#1ed760'
 }) => {
-  const chartRef = React.useRef(null);
-
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false // Cache la légende car redondante avec le titre
+        display: false
       },
       title: {
         display: true,
@@ -53,19 +48,14 @@ const BarChart = ({
         }
       },
       tooltip: {
-        backgroundColor: 'rgba(36, 36, 36, 0.9)',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
         titleColor: '#ffffff',
         bodyColor: '#ffffff',
         borderColor: 'rgba(255, 255, 255, 0.1)',
         borderWidth: 1,
         callbacks: {
-          label: function(context) {
-            let label = context.dataset.label || '';
-            if (label) {
-              label += ': ';
-            }
-            label += context.parsed.y.toLocaleString();
-            return label;
+          label: (context) => {
+            return `${xLabel}: ${context.raw.x}, ${yLabel}: ${context.raw.y}`;
           }
         }
       }
@@ -98,9 +88,6 @@ const BarChart = ({
           color: '#ffffff',
           font: {
             size: expanded ? 12 : 10
-          },
-          callback: function(value) {
-            return value.toLocaleString();
           }
         },
         title: {
@@ -116,31 +103,22 @@ const BarChart = ({
   };
 
   const chartData = {
-    labels: data.map(item => item[xKey]),
-    datasets: stacked ? 
-      Object.keys(data[0]).filter(key => key !== xKey).map((key, index) => ({
-        label: key,
-        data: data.map(item => item[key]),
-        backgroundColor: colors[index % colors.length],
-        borderColor: 'rgba(255, 255, 255, 0.1)',
-        borderWidth: 1
-      })) :
-      [{
-        label: yLabel,
-        data: data.map(item => item[yKey]),
-        backgroundColor: colors[0],
-        borderColor: 'rgba(255, 255, 255, 0.1)',
-        borderWidth: 1,
-        borderRadius: 4,
-        hoverBackgroundColor: '#1fdf6f'
-      }]
+    datasets: [{
+      data: data.map(item => ({
+        x: item[xKey],
+        y: item[yKey]
+      })),
+      backgroundColor: color + '80',
+      pointRadius: expanded ? 6 : 4,
+      pointHoverRadius: expanded ? 8 : 6,
+    }]
   };
 
   return (
     <div style={{ width: '100%', height: expanded ? '100%' : '300px' }}>
-      <Bar ref={chartRef} options={options} data={chartData} />
+      <Scatter options={options} data={chartData} />
     </div>
   );
 };
 
-export default BarChart;
+export default ScatterChart;
