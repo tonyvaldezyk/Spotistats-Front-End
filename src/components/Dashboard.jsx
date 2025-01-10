@@ -104,7 +104,7 @@ const charts = [
     hook: useTop10Dance,
     type: "list",
     title: "Top 10 des Titres les les Plus Dansants",
-    xKey: "danceablity",
+    xKey: "danceability",
     xLabel: "Dansabilité"
   },
   {
@@ -113,7 +113,7 @@ const charts = [
     type: "list",
     title: "Top 10 des Titres les les Plus Relaxants",
     xKey: "acousticness",
-    xLabel: "Acoustique"
+    xLabel: "Relaxant"
   },
   {
     key: "topLong",
