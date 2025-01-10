@@ -14,7 +14,7 @@ const TrackItem = ({ rank, name, artists, artwork, stats }) => (
   </div>
 );
 
-const List = ({ data, xKey }) => {
+const List = ({ data, xKey, xLabel }) => {
   return (
   <div className="top-tracks-list">
     {data.map((track, index) => (
@@ -24,7 +24,7 @@ const List = ({ data, xKey }) => {
         name={track.name} 
         artists={track.artists} 
         artwork={track.artwork_url} 
-        stats={`Popularité: ${track[xKey]}`}
+        stats={`${xLabel}: ${track[xKey]}`}
       />
     ))}
   </div>

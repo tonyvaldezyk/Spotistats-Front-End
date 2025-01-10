@@ -96,46 +96,43 @@ const charts = [
     hook: useTop10Popular,
     type: "list",
     title: "Top 10 des Titres les Plus Populaires",
+    xKey: "popularity",
+    xLabel: "Popularité"
   },
   {
     key: "topDance",
     hook: useTop10Dance,
     type: "list",
     title: "Top 10 des Titres les les Plus Dansants",
-    xKey: "popularity"
-  },
-  {
-    key: "topDance",
-    hook: useTop10Dance,
-    type: "list",
-    title: "Top 10 des Titres les les Plus Dansants",
-    xKey: "danceablity"
+    xKey: "danceablity",
+    xLabel: "Dansabilité"
   },
   {
     key: "topRelax",
     hook: useTop10Relaxing,
     type: "list",
     title: "Top 10 des Titres les les Plus Relaxants",
-    xKey: "acousticness"
-    // * 100
+    xKey: "acousticness",
+    xLabel: "Acoustique"
   },
   {
     key: "topLong",
     hook: useTop10Longest,
     type: "list",
     title: "Top 10 des Titres les les Plus Longs",
-    xKey: "duration_ms"
+    xKey: "duration_ms",
+    xLabel: "Durée"
     // stats={`Durée: ${Math.floor(track.duration_ms / 60000)}:${String(Math.floor((track.duration_ms % 60000) / 1000)).padStart(2, '0')}`}
   },
   {
     key: "artistYear",
     title: "Top 10 Artistes par Année",
-    hook: useTracksByArtistYear
+    hook: useTracksByArtistYear,
   },
   {
     key: "features",
     title: "Caractéristiques Musicales",
-    hook: useAcousticnessByYear
+    hook: useAcousticnessByYear,
   },
   {
     key: "mode",
