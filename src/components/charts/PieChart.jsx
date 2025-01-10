@@ -18,7 +18,7 @@ ChartJS.register(
 const PieChart = ({
   data,
   title,
-  colors = ['#1ed760', '#1fdf6f', '#d14f21', '#b10f2e'], // Couleurs par défaut
+  colors = ['#1ed760', '#1fdf6f', '#d14f21', '#b10f2e'],
   expanded = false
 }) => {
   const chartRef = React.useRef(null);
@@ -66,7 +66,6 @@ const PieChart = ({
       }
     }
   };
-
 
   const chartData = {
     labels: data.map(item => item.label),

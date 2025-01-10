@@ -26,28 +26,6 @@ import {
   useKey
 } from '../hooks/useApi';
 
-const YearInput = ({ value, onChange, placeholder }) => {
-  const [inputValue, setInputValue] = useState(value || '');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (inputValue && !isNaN(inputValue) && inputValue >= 1900 && inputValue <= new Date().getFullYear()) {
-      onChange(inputValue);
-    }
-  };
-
-  return (
-    <form className="year-input" onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        placeholder={placeholder}
-      />
-    </form>
-  );
-};
-
 const charts = [
   {
     key: "trackYears",
@@ -68,7 +46,6 @@ const charts = [
     yLabel: "Positivité (0-1)"
   },
   {
-    // essayer de faire fonctionner avec deux hooks différents pour le curved
     key: "accousticVSdanceability",
     chart: CurvedLineChart,
     xKey: "year",
@@ -110,7 +87,7 @@ const charts = [
     type: "list",
     title: "Top 10 des Titres les les Plus Relaxants",
     xKey: "acousticness",
-    xLabel: "Relaxant"
+    xLabel: "Score relaxation"
   },
   {
     key: "topLong",
@@ -119,7 +96,6 @@ const charts = [
     title: "Top 10 des Titres les les Plus Longs",
     xKey: "duration_ms",
     xLabel: "Durée"
-    // stats={`Durée: ${Math.floor(track.duration_ms / 60000)}:${String(Math.floor((track.duration_ms % 60000) / 1000)).padStart(2, '0')}`}
   },
   {
     key: "artistYear",
@@ -142,14 +118,32 @@ const charts = [
     key: "keys",
     title: "Tonalité du track",
     hook: useKey,
-    colors: [
-      '#ff6384', '#1eEf60', '#d14f21', '#b10f2e', '#f39c12',
-      '#e74c3c', '#9b59b6', '#3498db', '#2ecc71', '#e67e22',
-      '#ecf0f1', '#95a5a6'
-    ],
+    colors: ['#ff6384', '#1eEf60', '#d14f21', '#b10f2e', '#f39c12', '#e74c3c', '#9b59b6', '#3498db', '#2ecc71', '#e67e22', '#ecf0f1', '#95a5a6'],
     type: "doughnut"
   }
 ]
+
+const YearInput = ({ value, onChange, placeholder }) => {
+  const [inputValue, setInputValue] = useState(value || '');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (inputValue && !isNaN(inputValue) && inputValue >= 1900 && inputValue <= new Date().getFullYear()) {
+      onChange(inputValue);
+    }
+  };
+
+  return (
+    <form className="year-input" onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        placeholder={placeholder}
+      />
+    </form>
+  );
+};
 
 export const Dashboard = () => {
   const [activeSection, setActiveSection] = useState('dashboard');
@@ -171,11 +165,11 @@ export const Dashboard = () => {
     }
   };
 
-  const Widget = ({ key2, className = '', children}) => {
-    const { title, xKey, yKey, xLabel, yLabel, hook, labels, type, colors}  = charts?.find(item => item.key === key2);
+  const Widget = ({ identifier, className = '', children}) => {
+    const { title, xKey, yKey, xLabel, yLabel, hook, labels, type, colors}  = charts?.find(item => item.key === identifier);
     const { data, isLoading, error } = hook() || {};
-    const onExpand = () => handleExpand(`${key2}`)
-    const expanded = expandedWidget === `${key2}`
+    const onExpand = () => handleExpand(`${identifier}`)
+    const expanded = expandedWidget === `${identifier}`
 
     const content = () => {
       return (isLoading ? (
@@ -193,7 +187,7 @@ export const Dashboard = () => {
         yLabel={yLabel}
         labels={labels}
         colors={colors}
-        expanded={expandedWidget === `${key2}`}
+        expanded={expandedWidget === `${identifier}`}
         variant="smooth"/>
       ) : children )
     }
@@ -239,17 +233,14 @@ export const Dashboard = () => {
               <h2 className="section-title">Évolution Temporelle</h2>
               <div className="section-content">
                 <div className="kpis-grid">
-
-                  <Widget className="kpi-widget" key2="danceabilityVSvalence" />
-                  <Widget className="kpi-widget" key2="trackYears" />
-                  <Widget key2="popularityLanguage" />
-                  <Widget key2="mode" />
-                  <Widget key2="keys" />
-                  {/* <Widget key2="accousticVSdanceability" /> */}
-
+                  <Widget className="kpi-widget" identifier="danceabilityVSvalence" />
+                  <Widget className="kpi-widget" identifier="trackYears" />
+                  <Widget className="kpi-widget" identifier="popularityLanguage" />
+                  <Widget identifier="mode" />
+                  <Widget identifier="keys" />
                   <Widget 
                     className="kpi-widget"
-                    key2="artistYear"
+                    identifier="artistYear"
                   >
                     <YearInput
                       value={selectedYear}
@@ -278,10 +269,8 @@ export const Dashboard = () => {
                       <div className="placeholder">Entrez une année pour voir les données</div>
                     )}
                   </Widget>
-
-                    {/* faire le double hook handle */}
                   <Widget
-                    key2="features"
+                    identifier="features"
                     className="kpi-widget"
                   >
                     {isLoadingAcousticness || isLoadingDanceability ? (
@@ -305,8 +294,6 @@ export const Dashboard = () => {
                       />
                     )}
                   </Widget>
-
-                  
                 </div>
               </div>
             </div>
@@ -315,10 +302,10 @@ export const Dashboard = () => {
               <h2 className="section-title">Top Morceaux</h2>
               <div className="section-content">
                 <div className="kpis-grid">
-                  <Widget key2 = "topPopular"/>
-                  <Widget key2 = "topDance"/>
-                  <Widget key2 = "topRelax"/>
-                  <Widget key2 = "topLong"/>
+                  <Widget identifier = "topPopular"/>
+                  <Widget identifier = "topDance"/>
+                  <Widget identifier = "topRelax"/>
+                  <Widget identifier = "topLong"/>
                 </div>
               </div>
             </div>

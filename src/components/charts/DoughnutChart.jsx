@@ -18,12 +18,11 @@ ChartJS.register(
 const DoughnutChart = ({
   data,
   title,
-  colors = ['#1ed760', '#1fdf6f', '#d14f21', '#b10f2e'], // Couleurs par défaut
+  colors = ['#1ed760', '#1fdf6f', '#d14f21', '#b10f2e'],
   expanded = false
 }) => {
   const chartRef = React.useRef(null);
 
-  // Options de configuration du graphique
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -68,7 +67,6 @@ const DoughnutChart = ({
     }
   };
 
-  // Préparation des données pour le graphique
   const chartData = {
     labels: data.map(item => item.label),
     datasets: [

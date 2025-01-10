@@ -4,7 +4,6 @@ import HeatmapChart from './HeatmapChart';
 import CurvedLineChart from './CurvedLineChart';
 import PieChart from './PieChart';
 import DoughnutChart from './DoughnutChart';
-
 import List from './ListChart';
 
 const Chart = ({
@@ -74,8 +73,7 @@ const Chart = ({
       title={title}
     />
   )
-
-  else return <div>Non</div>
+  else return <div>Données non disponible</div>
 }
 
 export default Chart
