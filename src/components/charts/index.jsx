@@ -2,6 +2,9 @@ import BarChart from './BarChart';
 import LineChart from './LineChart';
 import HeatmapChart from './HeatmapChart';
 import CurvedLineChart from './CurvedLineChart';
+import PieChart from './PieChart';
+import DoughnutChart from './DoughnutChart';
+
 import List from './ListChart';
 
 const Chart = ({
@@ -12,11 +15,11 @@ const Chart = ({
   xLabel,
   yLabel,
   labels,
+  colors,
+  title,
   expanded,
   variant = ""
 }) => {
-
-  console.log(chartType, data.popularity_per_language)
 
   if (chartType === "lineChart") return (
     <LineChart 
@@ -51,6 +54,27 @@ const Chart = ({
   if (chartType === "list") return (
     <List data={data} xKey={xKey}/>
   )
+  if (chartType === "pie") return (
+    <PieChart 
+      data={Object.entries(data.items).map(([key, value]) => ({
+      label: key,
+      value: value
+    }))} 
+      colors={colors}
+      title={title}
+    />
+  )
+  if (chartType === "doughnut") return (
+    <DoughnutChart 
+      data={Object.entries(data.items).map(([key, value]) => ({
+      label: key,
+      value: value
+    }))} 
+      colors={colors}
+      title={title}
+    />
+  )
+
   else return <div>Non</div>
 }
 

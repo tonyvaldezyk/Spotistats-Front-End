@@ -4,6 +4,7 @@ import {
   RiMusicLine, 
   RiCloseLine
 } from 'react-icons/ri';
+
 import BarChart from './charts/BarChart';
 import CurvedLineChart from './charts/CurvedLineChart';
 
@@ -23,7 +24,9 @@ import {
   useTop10Dance,
   useTop10Relaxing,
   usePopularityByLanguage,
-  useTop10Longest
+  useTop10Longest,
+  useMode,
+  useKey
 } from '../hooks/useApi';
 
 const YearInput = ({ value, onChange, placeholder }) => {
@@ -133,6 +136,24 @@ const charts = [
     key: "features",
     title: "Caractéristiques Musicales",
     hook: useAcousticnessByYear
+  },
+  {
+    key: "mode",
+    title: "Modalité du track (Major vs Minor)",
+    hook: useMode,
+    colors: ['#1ed760', '#d14f21'],
+    type: "pie"
+  },
+  {
+    key: "keys",
+    title: "Tonalité du track",
+    hook: useKey,
+    colors: [
+      '#ff6384', '#1eEf60', '#d14f21', '#b10f2e', '#f39c12',
+      '#e74c3c', '#9b59b6', '#3498db', '#2ecc71', '#e67e22',
+      '#ecf0f1', '#95a5a6'
+    ],
+    type: "doughnut"
   }
 ]
 
@@ -157,7 +178,7 @@ export const Dashboard = () => {
   };
 
   const Widget = ({ key2, className = '', children}) => {
-    const { title, xKey, yKey, xLabel, yLabel, hook, labels, type}  = charts?.find(item => item.key === key2);
+    const { title, xKey, yKey, xLabel, yLabel, hook, labels, type, colors}  = charts?.find(item => item.key === key2);
     const { data, isLoading, error } = hook() || {};
     const onExpand = () => handleExpand(`${key2}`)
     const expanded = expandedWidget === `${key2}`
@@ -177,6 +198,7 @@ export const Dashboard = () => {
         xLabel={xLabel}
         yLabel={yLabel}
         labels={labels}
+        colors={colors}
         expanded={expandedWidget === `${key2}`}
         variant="smooth"/>
       ) : children )
@@ -245,6 +267,8 @@ export const Dashboard = () => {
                   <Widget className="kpi-widget" key2="danceabilityVSvalence" />
                   <Widget className="kpi-widget" key2="trackYears" />
                   <Widget key2="popularityLanguage" />
+                  <Widget key2="mode" />
+                  <Widget key2="keys" />
                   {/* <Widget key2="accousticVSdanceability" /> */}
 
                   <Widget 
@@ -305,6 +329,8 @@ export const Dashboard = () => {
                       />
                     )}
                   </Widget>
+
+                  
                 </div>
               </div>
             </div>

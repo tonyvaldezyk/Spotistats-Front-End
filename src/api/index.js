@@ -65,4 +65,14 @@ export const spotifyApi = {
     const response = await axios.get(`${BASE_URL}/top-10-longest`);
     return response.data;
   },
+
+  getMode: async () => {
+    const response = await axios.get(`${BASE_URL}/mode`);
+    return response.data;
+  },
+
+  getKey: async () => {
+    const response = await axios.get(`${BASE_URL}/key`);
+    return response.data;
+  },
 };

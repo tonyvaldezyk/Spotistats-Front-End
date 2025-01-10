@@ -15,8 +15,6 @@ const TrackItem = ({ rank, name, artists, artwork, stats }) => (
 );
 
 const List = ({ data, xKey }) => {
-  console.log(data)
-
   return (
   <div className="top-tracks-list">
     {data.map((track, index) => (
