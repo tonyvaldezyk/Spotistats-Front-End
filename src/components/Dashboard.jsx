@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { 
-  RiDashboardLine, 
-  RiMusicLine, 
   RiCloseLine
 } from 'react-icons/ri';
 
@@ -9,7 +7,6 @@ import BarChart from './charts/BarChart';
 import CurvedLineChart from './charts/CurvedLineChart';
 
 import SpotifyLogo from './layout/spotifyLogo';
-import SidebarItem from './layout/sidebarItem';
 import LoadingSpinner from './layout/loadingSpinner';
 import ErrorMessage from './layout/errorMessage';
 import Chart from './charts';
@@ -228,30 +225,12 @@ export const Dashboard = () => {
   }
 
   return (
-    <div className="app-container">
-      <div className="sidebar">
-        <div className="logo-container">
-          <SpotifyLogo />
-        </div>
-        <div className="sidebar-items">
-          <SidebarItem 
-            icon={<RiDashboardLine />}
-            label="Dashboard" 
-            active={activeSection === 'dashboard'} 
-            onClick={() => setActiveSection('dashboard')}
-          />
-          <SidebarItem 
-            icon={<RiMusicLine />}
-            label="Top Tracks" 
-            active={activeSection === 'tracks'} 
-            onClick={() => setActiveSection('tracks')}
-          />
-        </div>
-      </div>
-
       <div className="main-content">
         <header className="header">
-          <h1>Analyse des Données Spotify</h1>
+          <div className="logo-container">
+            <SpotifyLogo />
+          </div>
+          <h1>Tableau de bord Statistique</h1>
         </header>
 
         <div className="dashboard-grid">
@@ -346,6 +325,5 @@ export const Dashboard = () => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
