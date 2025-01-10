@@ -25,6 +25,13 @@ export const useAcousticnessByYear = () => {
   });
 };
 
+export const useTempoByYear = () => {
+  return useQuery({
+    queryKey: ["tempoByYear"],
+    queryFn: spotifyApi.getTempoPerYear,
+  });
+};
+
 export const useDanceabilityByYear = () => {
   return useQuery({
     queryKey: ["danceabilityByYear"],

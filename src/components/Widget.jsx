@@ -1,52 +1,32 @@
 import React from 'react';
-import { RiExpandLine, RiCloseLine } from 'react-icons/ri';
 
-export const Widget = ({ 
-  title, 
-  children, 
-  className = '', 
-  onExpand, 
-  expanded = false 
-}) => {
-  return (
-    <div 
-      className={`widget ${className} ${expanded ? 'expanded' : ''}`}
-      style={{
-        position: expanded ? 'fixed' : 'relative',
-        top: expanded ? '0' : 'auto',
-        left: expanded ? '0' : 'auto',
-        right: expanded ? '0' : 'auto',
-        bottom: expanded ? '0' : 'auto',
-        zIndex: expanded ? 1000 : 1,
-        width: expanded ? '100vw' : '100%',
-        height: expanded ? '100vh' : '100%',
-        transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
-        transform: 'scale(1)',
-        cursor: 'pointer'
-      }}
-    >
-      <div className="widget-header">
-        <h3>{title}</h3>
-        <button 
-          className="expand-button"
-          onClick={(e) => {
-            e.stopPropagation();
-            onExpand?.();
-          }}
-          aria-label={expanded ? "Collapse" : "Expand"}
-        >
-          {expanded ? <RiCloseLine /> : <RiExpandLine />}
-        </button>
+const Widget2 = ({ key, title, children, className = '', onExpand, expanded }) => {
+  if (expanded) {
+    return (
+      <div className="expanded-widget-overlay" onClick={() => onExpand()}>
+        <div className="expanded-widget" onClick={e => e.stopPropagation()}>
+          <button className="close-button" onClick={() => onExpand()}>
+            <RiCloseLine size={24} />
+          </button>
+          <h3 className="widget-title">{title}</h3>
+          <div className="widget-content">
+            {children}
+          </div>
+        </div>
       </div>
-      <div 
-        className="widget-content"
-        style={{
-          height: expanded ? 'calc(100vh - 60px)' : '100%',
-          transition: 'height 0.3s ease-in-out'
-        }}
-      >
+    );
+  }
+
+  return (
+    <div className={`widget ${className}`} onClick={onExpand}>
+      <h3 className="widget-title">{title}</h3>
+      <div className="widget-content">
         {children}
       </div>
     </div>
   );
 };
+
+
+
+export default Widget2

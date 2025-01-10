@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios from "axios";
 
-const BASE_URL = 'http://localhost:8000';
+const BASE_URL = "http://localhost:8000";
 
 export const spotifyApi = {
   // Analyses temporelles
@@ -17,6 +17,11 @@ export const spotifyApi = {
   // Analyses musicales
   getAcousticnessPerYear: async () => {
     const response = await axios.get(`${BASE_URL}/acousticness-per-year`);
+    return response.data;
+  },
+
+  getTempoPerYear: async () => {
+    const response = await axios.get(`${BASE_URL}/tempo-per-year`);
     return response.data;
   },
 
@@ -59,5 +64,5 @@ export const spotifyApi = {
   getTop10Longest: async () => {
     const response = await axios.get(`${BASE_URL}/top-10-longest`);
     return response.data;
-  }
+  },
 };
