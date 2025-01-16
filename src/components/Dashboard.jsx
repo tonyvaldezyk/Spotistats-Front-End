@@ -111,7 +111,7 @@ const charts = [
     key: "mode",
     title: "Modalité du track (Major vs Minor)",
     hook: useMode,
-    colors: ['#1ed760', '#d14f21'],
+    colors: ['#ffaa00', '#D33F49'],
     type: "pie"
   },
   {
